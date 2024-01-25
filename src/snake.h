@@ -8,11 +8,12 @@ class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height)
+  Snake(int grid_width, int grid_height, int *score)
       : grid_width(grid_width),
         grid_height(grid_height),
         head_x(grid_width / 2),
-        head_y(grid_height / 2) {}
+        head_y(grid_height / 2),
+        _score(score) {}
 
   void Update();
 
@@ -35,6 +36,7 @@ class Snake {
   bool growing{false};
   int grid_width;
   int grid_height;
+  int *_score;
 };
 
 #endif
