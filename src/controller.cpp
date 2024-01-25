@@ -36,8 +36,13 @@ void Controller::HandleInput(bool &running, Snake &snake, Game &game) const {
           ChangeDirection(snake, Snake::Direction::kRight,
                           Snake::Direction::kLeft);
           break;
+
         case SDLK_ESCAPE:
           game.TriggerPause();
+          break;
+        
+        case SDLK_q:
+          running = false;
           break;
       }
     }
