@@ -61,7 +61,7 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
       alive = false;
 
       std::string msgText{"Score: " + std::to_string(*_score) + "\nSize: " + std::to_string(size)};
-      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgText.c_str(), NULL);
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You lose!", msgText.c_str(), NULL);
     }
   }
 }
