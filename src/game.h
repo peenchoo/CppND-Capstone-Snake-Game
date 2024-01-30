@@ -21,6 +21,7 @@ class Game {
   SDL_Point food;
   bool _paused;
 
+
   std::random_device dev;
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
@@ -32,6 +33,9 @@ class Game {
   void Update(Renderer *renderer);
   void Pause();
   void Resume();
+
+protected:
+  bool wall;
 };
 
 #endif
