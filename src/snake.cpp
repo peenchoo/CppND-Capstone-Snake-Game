@@ -2,7 +2,8 @@
 #include <cmath>
 #include <iostream>
 
-void Snake::Update() {
+void Snake::Update() 
+{
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(
@@ -17,6 +18,25 @@ void Snake::Update() {
   if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) {
     UpdateBody(current_cell, prev_cell);
   }
+}
+
+void Snake::Update(Snake secondSnake)
+{
+    SDL_Point prev_cell{
+        static_cast<int>(head_x),
+        static_cast<int>(
+            head_y)}; // We first capture the head's cell before updating.
+    UpdateHead();
+    SDL_Point current_cell{
+        static_cast<int>(head_x),
+        static_cast<int>(head_y)}; // Capture the head's cell after updating.
+
+    // Update all of the body vector items if the snake head has moved to a new
+    // cell.
+    if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y)
+    {
+        UpdateBody(current_cell, prev_cell, secondSnake);
+    }
 }
 
 void Snake::UpdateHead() {
@@ -60,10 +80,54 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
       alive = false;
 
-      std::string msgText{"Score: " + std::to_string(*_score) + "\nSize: " + std::to_string(size)};
-      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You lose!", msgText.c_str(), NULL);
+      if (!_multiplayer)
+      {
+        std::string msgText{"Score: " + std::to_string(*_score) + "\nSize: " + std::to_string(size)};
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You lose!", msgText.c_str(), NULL);
+      }
     }
   }
+}
+
+void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell, Snake secondSnake) {
+  // Add previous head location to vector
+  body.push_back(prev_head_cell);
+
+  if (!growing) 
+  {
+    // Remove the tail from the vector.
+    body.erase(body.begin());
+  } 
+  else 
+  {
+    growing = false;
+    size++;
+  }
+
+  // Check if the snake has died by biting itself.
+  for (auto const &item : body) 
+  {
+    if (current_head_cell.x == static_cast<int>(item.x) && current_head_cell.y == static_cast<int>(item.y)) 
+    {
+      alive = false;
+    }
+  }
+
+  // Check if the snake has died by biting the other player snake.
+  for (auto const &item : secondSnake.body) 
+  {
+    if (current_head_cell.x == static_cast<int>(item.x) && current_head_cell.y == static_cast<int>(item.y)) 
+    {
+      alive = false;
+    }
+  }
+
+  // Check if the snake has died by biting itself.
+  if (current_head_cell.x == static_cast<int>(secondSnake.head_x) && current_head_cell.y == static_cast<int>(secondSnake.head_y)) 
+  {
+    alive = false;
+  }
+  
 }
 
 void Snake::GrowBody() { growing = true; }
@@ -79,4 +143,10 @@ bool Snake::SnakeCell(int x, int y) {
     }
   }
   return false;
+}
+
+void Snake::setHeadPosition(float x, float y)
+{
+  head_x = x;
+  head_y = y;
 }

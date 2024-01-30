@@ -1,6 +1,8 @@
 #include <iostream>
 #include "controller.h"
 #include "game.h"
+#include "multiplayer_game.h"
+#include "game_mode_enum.h"
 #include "renderer.h"
 #include "menu_enum.h"
 #include "menu.h"
@@ -20,22 +22,45 @@ int main() {
   while(true)
   {
     menu.DrawMenu();
-    MenuEnum::States mode = menu.MenuController();
+    MenuEnum::States selection = menu.MenuController();
 
-    if (mode == MenuEnum::PLAY)
+    if (selection == MenuEnum::PLAY)
     {
-      menu.setPlayerName();
-      Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-      Controller controller;
-      Game game(kGridWidth, kGridHeight);
-      game.Run(controller, &renderer, kMsPerFrame);
-      scores.addScore(menu.getPlayerName(),game.GetScore());
-      std::cout << "Game has terminated successfully!\n";
-      std::cout << "Score: " << game.GetScore() << "\n";
-      std::cout << "Size: " << game.GetSize() << "\n";
-      return 0;
+      while (true)
+      {
+        menu.DrawGameModeMenu();
+        GameModeEnum::States mode = menu.GameModeMenuController();
+
+        if (mode == GameModeEnum::ONE_PLAYER)
+        {
+          menu.setPlayerName();
+          Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
+          Controller controller;
+          Game game(kGridWidth, kGridHeight);
+          game.Run(controller, &renderer, kMsPerFrame);
+          scores.addScore(menu.getPlayerName(),game.GetScore());
+          std::cout << "Game has terminated successfully!\n";
+          std::cout << "Score: " << game.GetScore() << "\n";
+          std::cout << "Size: " << game.GetSize() << "\n";
+          return 0;
+
+        }
+        else if (mode == GameModeEnum::TWO_PLAYERS)
+        {
+          Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
+          MultiplayerGame multiplayerGame(kGridWidth, kGridHeight);
+          multiplayerGame.Run(renderer, kMsPerFrame);
+          std::cout << "Game has terminated successfully!\n";
+          return 0;
+
+        }
+        else if (mode == GameModeEnum::EXIT)
+        {
+          break;
+        }
+      }
     }
-    else if (mode == MenuEnum::SCORES)
+    else if (selection == MenuEnum::SCORES)
     {
       while(true)
       {
@@ -56,7 +81,7 @@ int main() {
         }
       }
     }
-    else if (mode == MenuEnum::EXIT)
+    else if (selection == MenuEnum::EXIT)
     {
       break;
     }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "menu_enum.h"
+#include "game_mode_enum.h"
 
 class Menu 
 {
@@ -11,7 +12,9 @@ public:
     Menu();
 
     void DrawMenu();
+    void DrawGameModeMenu();
     MenuEnum::States MenuController();
+    GameModeEnum::States GameModeMenuController();
     void setPlayerName();
     std::string getPlayerName();
 

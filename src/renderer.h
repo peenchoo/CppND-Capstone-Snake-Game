@@ -12,6 +12,7 @@ class Renderer {
   ~Renderer();
 
   void Render(Snake const snake, SDL_Point const &food);
+  void RenderMultiPlayer(Snake const snake, Snake const snake2, SDL_Point const &food);
   void UpdateWindowTitle(int score, int fps);
   void SetPauseTitle();
 

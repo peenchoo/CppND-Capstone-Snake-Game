@@ -15,6 +15,15 @@ void Menu::DrawMenu()
     std::cout << "3. Quit" << std::endl;
 }
 
+void Menu::DrawGameModeMenu()
+{
+    std::cout << "" << std::endl;
+    std::cout << "/----------------- Game Mode Menu ----------------/" << std::endl;
+    std::cout << "1. 1 Player" << std::endl;
+    std::cout << "2. 2 Players" << std::endl;
+    std::cout << "3. Quit" << std::endl;
+}
+
 MenuEnum::States Menu::MenuController()
 {
     int n;
@@ -33,6 +42,26 @@ MenuEnum::States Menu::MenuController()
     }
 
     return MenuEnum::getStateEnum(n);
+}
+
+GameModeEnum::States Menu::GameModeMenuController()
+{
+    int n;
+    while (true) 
+    {
+        if (std::cin >> n) 
+        {
+            break;
+        } 
+        else 
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid Input!\nPlease try again.\n";
+        }
+    }
+
+    return GameModeEnum::getStateEnum(n);
 }
 
 void Menu::setPlayerName() 
