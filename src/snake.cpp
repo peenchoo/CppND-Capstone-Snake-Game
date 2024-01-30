@@ -122,7 +122,7 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell, 
     }
   }
 
-  // Check if the snake has died by biting itself.
+  // Check if the snake has died by biting the other player head.
   if (current_head_cell.x == static_cast<int>(secondSnake.head_x) && current_head_cell.y == static_cast<int>(secondSnake.head_y)) 
   {
     alive = false;

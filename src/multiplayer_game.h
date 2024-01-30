@@ -19,6 +19,8 @@ class MultiplayerGame {
   Snake snake;
   Snake snake2;
   SDL_Point food;
+  Controller controllerPlayer1;
+  Controller controllerPlayer2;
 
   std::random_device dev;
   std::mt19937 engine;

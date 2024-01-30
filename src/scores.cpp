@@ -1,7 +1,7 @@
 #include <limits>
 #include "scores.h"
 
-Scores::Scores() 
+Scores::Scores() : _scores(std::make_unique<std::vector<Score>>()) 
 {
     loadScores();
 }
@@ -9,13 +9,13 @@ Scores::Scores()
 void Scores::addScore(const std::string& name, int score) 
 {
     Score newScore = {name, score};
-    _scores.push_back(newScore);
+    _scores->push_back(newScore);
     saveScores();
 }
 
 void Scores::showHighScores(int amount) {
     std::cout << "\nHigh Scores:\n";
-    std::vector<Score> highScores = _scores;
+    std::vector<Score> highScores = *_scores;
     std::sort(highScores.begin(), highScores.end());
     int amountToShow = std::min(amount, static_cast<int>(highScores.size()));
     for (int i = 0; i < amountToShow; ++i) 
@@ -26,7 +26,7 @@ void Scores::showHighScores(int amount) {
 
 void Scores::showRecentScores(int amount) {
     std::cout << "\nRecent Scores:\n";
-    std::vector<Score> recentScores = _scores;
+    std::vector<Score> recentScores = *_scores;
     std::reverse(recentScores.begin(), recentScores.end());
     int amountToShow = std::min(amount, static_cast<int>(recentScores.size()));
     for (int i = 0; i < amountToShow; ++i) 
@@ -67,11 +67,11 @@ void Scores::loadScores() {
     std::ifstream file(scoresFile);
     if (file.is_open()) 
     {
-        _scores.clear();
+        _scores->clear();
         Score score;
         while (file >> score.name >> score.score) 
         {
-            _scores.push_back(score);
+            _scores->push_back(score);
         }
         file.close();
     }
@@ -85,7 +85,7 @@ void Scores::saveScores() {
     std::ofstream file(scoresFile);
     if (file.is_open()) 
     {
-        for (const auto& score : _scores) 
+        for (const auto& score : *_scores) 
         {
             file << score.name << " " << score.score << std::endl;
         }

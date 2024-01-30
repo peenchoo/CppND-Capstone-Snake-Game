@@ -1,13 +1,18 @@
 #include "multiplayer_game.h"
 #include <iostream>
+#include <future>
+#include <mutex>
+#include <condition_variable>
 #include "SDL.h"
 
 MultiplayerGame::MultiplayerGame(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
-	  snake2(grid_width, grid_height),
+	    snake2(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) 
+      random_h(0, static_cast<int>(grid_height)), 
+      controllerPlayer1(),
+      controllerPlayer2()
 {
   snake.setHeadPosition(random_w(engine),random_h(engine));
   snake2.setHeadPosition(random_w(engine),random_h(engine));
@@ -15,24 +20,50 @@ MultiplayerGame::MultiplayerGame(std::size_t grid_width, std::size_t grid_height
 }
 
 void MultiplayerGame::Run(Renderer &renderer, std::size_t target_frame_duration) { 
-	Uint32 title_timestamp = SDL_GetTicks();
+	  Uint32 title_timestamp = SDL_GetTicks();
     Uint32 frame_start;
     Uint32 frame_end;
     Uint32 frame_duration;
     int frame_count = 0;
     bool running = true;
-  	
-  	Controller controllerPlayer1;
-  	Controller controllerPlayer2;
+
+
+    std::mutex inputMutex;
+    std::condition_variable inputCV;
+
+    auto inputFunctionArrows = [&](Controller &controller, Snake &snake) 
+    {
+      while (running) {
+        std::unique_lock<std::mutex> lock(inputMutex);
+        inputCV.wait(lock);
+
+        controller.HandleMultiplayerArrowsInput(running, snake);
+
+        lock.unlock();
+      }
+    };
+
+    auto inputFunctionLetters = [&](Controller &controller, Snake &snake) 
+    {
+      while (running) {
+        std::unique_lock<std::mutex> lock(inputMutex);
+        inputCV.wait(lock);
+
+        controller.HandleMultiplayerLettersInput(running, snake);
+
+        lock.unlock();
+      }
+    };
+
+    std::future<void> inputPlayer1Future = std::async(std::launch::async, inputFunctionArrows, std::ref(controllerPlayer1), std::ref(snake));
+    std::future<void> inputPlayer2Future = std::async(std::launch::async, inputFunctionLetters, std::ref(controllerPlayer2), std::ref(snake2));
+
   	
     while (running) {
       frame_start = SDL_GetTicks();
 
-      // Input, Update, Render - the main game loop.
-      std::thread inputPlayer1(&Controller::HandleMultiplayerArrowsInput, controllerPlayer1, std::ref(running), std::ref(snake));
-      std::thread inputPlayer2(&Controller::HandleMultiplayerLettersInput, controllerPlayer2, std::ref(running), std::ref(snake2));
-      inputPlayer1.join();
-      inputPlayer2.join();
+      std::lock_guard<std::mutex> lock(inputMutex);
+      inputCV.notify_all();
     
       Update();
       renderer.RenderMultiPlayer(snake, snake2, food);

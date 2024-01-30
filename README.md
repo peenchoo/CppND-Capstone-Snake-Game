@@ -1,6 +1,6 @@
 # CPPND: Capstone Snake Game Example
 
-This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
+This is a repo for the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
 <img src="snake_game.gif"/>
 
@@ -30,17 +30,63 @@ In this project, you can build your own C++ application or extend this Snake gam
 3. Compile: `cmake .. && make`
 4. Run it: `./SnakeGame`.
 
+## New Features Added
 
-## CC Attribution-ShareAlike 4.0 International
+* Pause and Resume with `Esc` key
+* Quit the game with `Q` key
+* Added a menu to control the flow of the application
+* Storage of scores and the possibility of accessing them through the menu
+* 2 Player mode added
+
+## Rubric Points
+
+#### README
+
+| Success Criteria  | Explanation and address |
+| ------------- | ------------- |
+| A README with instructions is included with the project  | README.md |
+| The README indicates the new features you added to the game.  | README.md  - New Features Added|
+| The README includes information about each rubric point addressed. | README.md  - Rubric Points|
+
+#### Compiling and Testing
+
+| Success Criteria  | Explanation and address |
+| ------------- | ------------- |
+| The submission must compile and run without errors on the Udacity project workspace.  | OK  |
 
 
-Shield: [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
+#### Loops, Functions, I/O
 
-This work is licensed under a
-[Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
+| Success Criteria  | Explanation and address |
+| ------------- | ------------- |
+| The project demonstrates an understanding of C++ functions and control structures.  | All code added  |
+| The project reads data from a file and process the data, or the program writes data to a file.  | `scores.cpp` - loadScores() and saveScores()  |
+| The project accepts user input and processes the input. | `controller.cpp` - Added the new input reads like `Q` and `Esc`  |
+| The project uses data structures and immutable variables.  | All code added - Also trying to follow the SOLID principles |
 
-[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
+#### Object Oriented Programming
 
-[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
-[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
-[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+| Success Criteria  | Explanation and address |
+| ------------- | ------------- |
+| One or more classes are added to the project with appropriate access specifiers for class members. | `scores.h`, `menu.h `|
+| Class constructors utilize member initialization lists.  | `snake.h`  |
+| Classes abstract implementation details from their interfaces.  | All header files  |
+| Overloaded functions allow the same function to operate on different parameters.  | `snake.h` - UpdateBody function |
+
+#### Memory Management
+
+| Success Criteria  | Explanation and address |
+| ------------- | ------------- |
+| The project makes use of references in function declarations.  | `scores.h`, `snake.h` (line 16), `score.h` |
+| The project uses destructors appropriately.  | In `renderer.h` the destructor is used to close and removed all the memory after the game ends |
+| The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate  | `scores.cpp`  |
+| The project uses smart pointers instead of raw pointers.  | `scores.cpp`  |
+
+#### Concurrency
+
+| Success Criteria  | Explanation and address |
+| ------------- | ------------- |
+| The project uses multithreading.  | `multiplayer_game.cpp` (line 32) |
+| A promise and future is used in the project.  | `multiplayer_game.cpp` (line 58) |
+| A mutex or lock is used in the project.  | `multiplayer_game.cpp` (line 58) |
+| A condition variable is used in the project.  | `multiplayer_game.cpp` (line 32) |

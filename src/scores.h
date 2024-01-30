@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <memory>
 #include "score.h"
 #include "scores_enum.h"
 
@@ -21,7 +22,7 @@ public:
     ScoresEnum::States ScoresMenuController();
 
 private:
-    std::vector<Score> _scores;
+    std::unique_ptr<std::vector<Score>> _scores;
     const std::string scoresFile = "scores.txt";
 
     void loadScores();
