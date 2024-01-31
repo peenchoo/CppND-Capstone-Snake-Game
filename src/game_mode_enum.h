@@ -9,6 +9,7 @@ public:
     {
         NORMAL,
         TOXIC,
+        HARD,
         EXIT,
         INVALID
     };
@@ -24,6 +25,9 @@ public:
             return TOXIC;
             break;
         case 3:
+            return HARD;
+            break;
+        case 4:
             return EXIT;
             break;
         default:

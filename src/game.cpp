@@ -1,14 +1,16 @@
 #include "game.h"
 #include <iostream>
-#include <thread>
-#include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height, bool isToxicFoodMode)
+Game::Game(std::size_t grid_width, std::size_t grid_height, bool isToxicFoodMode, bool isHardModeActive)
     : snake(grid_width, grid_height, &score),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)),
-      isToxicFoodMode(isToxicFoodMode) 
+      _isToxicFoodMode(isToxicFoodMode),
+      _isHardModeTimerActive(false),
+      _isHardModeActive(isHardModeActive),
+      mutex(),
+      condition_var()
 {
   PlaceFood();
 }
@@ -59,7 +61,8 @@ void Game::Run(Controller const &controller, Renderer *renderer,
   }
 }
 
-void Game::PlaceFood() {
+void Game::PlaceFood() 
+{
   int x, y;
   while (true) {
     x = random_w(engine);
@@ -101,13 +104,45 @@ void Game::Update(Renderer *renderer) {
     snake.GrowBody();
     snake.speed += 0.02;
 
-    if(isToxicFoodMode && udist(gen) <= 15)
+    if(_isToxicFoodMode && udist(gen) <= 15)
     {
       isToxicFood = true;
       // resolves 5 seconds later
       std::thread poisonTimer(&Game::TimerThread, &isToxicFood);
       poisonTimer.detach();
     }
+  }
+
+  if (_isHardModeActive && !_isHardModeTimerActive)
+  {
+    PlaceFood();
+    _isHardModeTimerActive = true;
+    std::thread hardModeThread(&Game::HardModeTimer, std::ref(*this));
+    hardModeThread.detach();
+  }
+}
+
+void Game::HardModeTimer(Game& gameInstance)
+{
+  const int timeInSeconds = 5;
+  auto startTime = std::chrono::high_resolution_clock::now();
+  std::unique_lock<std::mutex> lock(gameInstance.mutex);
+  while (gameInstance._isHardModeTimerActive)
+  {
+    lock.unlock();
+    auto current_Time = std::chrono::high_resolution_clock::now();
+    auto elapsed_Seconds = std::chrono::duration_cast<std::chrono::seconds>(current_Time - startTime).count();
+    if (elapsed_Seconds >= timeInSeconds)
+    {
+      // Time is up
+      gameInstance._isHardModeTimerActive = false;
+      gameInstance.food.x = 1;
+      gameInstance.food.y = 1;
+      break;
+    }
+    lock.lock();
+    // Wait for a short interval or until the condition_variable is notified
+    gameInstance.condition_var.wait_for(lock, std::chrono::milliseconds(800));
   }
 }
 

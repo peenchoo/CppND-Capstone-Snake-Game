@@ -35,7 +35,7 @@ int main() {
           menu.setPlayerName();
           Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
           Controller controller;
-          Game game(kGridWidth, kGridHeight, false);
+          Game game(kGridWidth, kGridHeight, false, false);
           game.Run(controller, &renderer, kMsPerFrame);
           scores.addScore(menu.getPlayerName(),game.GetScore());
           std::cout << "Game has terminated successfully!\n";
@@ -49,7 +49,20 @@ int main() {
           menu.setPlayerName();
           Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
           Controller controller;
-          Game game(kGridWidth, kGridHeight, true);
+          Game game(kGridWidth, kGridHeight, true, false);
+          game.Run(controller, &renderer, kMsPerFrame);
+          scores.addScore(menu.getPlayerName(),game.GetScore());
+          std::cout << "Game has terminated successfully!\n";
+          std::cout << "Score: " << game.GetScore() << "\n";
+          std::cout << "Size: " << game.GetSize() << "\n";
+          return 0;
+        }
+        else if (mode == GameModeEnum::HARD)
+        {
+          menu.setPlayerName();
+          Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
+          Controller controller;
+          Game game(kGridWidth, kGridHeight, false, true);
           game.Run(controller, &renderer, kMsPerFrame);
           scores.addScore(menu.getPlayerName(),game.GetScore());
           std::cout << "Game has terminated successfully!\n";

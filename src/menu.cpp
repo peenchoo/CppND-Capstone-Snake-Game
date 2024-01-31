@@ -21,7 +21,8 @@ void Menu::DrawGameModeMenu()
     std::cout << "/----------------- Game Mode Menu ----------------/" << std::endl;
     std::cout << "1. Normal Mode" << std::endl;
     std::cout << "2. Toxic Food Mode" << std::endl;
-    std::cout << "3. Quit" << std::endl;
+    std::cout << "3. Hard Mode" << std::endl;
+    std::cout << "4. Quit" << std::endl;
 }
 
 MenuEnum::States Menu::MenuController()

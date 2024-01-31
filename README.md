@@ -36,7 +36,8 @@ In this project, you can build your own C++ application or extend this Snake gam
 * Quit the game with `Q` key
 * Added a menu to control the flow of the application
 * Storage of scores and the possibility of accessing them through the menu
-* 2 Player mode added
+* Toxic food mode - You can eat ramdonly a food that changes you your controllers, for example if you try to move up you go down
+* Hard mode - Every 5 seconds the food change its position
 
 ## Rubric Points
 
@@ -86,7 +87,6 @@ In this project, you can build your own C++ application or extend this Snake gam
 
 | Success Criteria  | Explanation and address |
 | ------------- | ------------- |
-| The project uses multithreading.  | `multiplayer_game.cpp` (line 32) |
-| A promise and future is used in the project.  | `multiplayer_game.cpp` (line 58) |
-| A mutex or lock is used in the project.  | `multiplayer_game.cpp` (line 58) |
-| A condition variable is used in the project.  | `multiplayer_game.cpp` (line 32) |
+| The project uses multithreading.  | `game.cpp`  |
+| A mutex or lock is used in the project.  | `game.cpp`  |
+| A condition variable is used in the project.  | `game.cpp` |
