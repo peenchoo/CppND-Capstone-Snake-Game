@@ -8,18 +8,12 @@ class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height)
-    : grid_width(grid_width),
-      grid_height(grid_height),
-      _multiplayer(true)  {}
-
   Snake(int grid_width, int grid_height, int *score)
       : grid_width(grid_width),
         grid_height(grid_height),
         head_x(grid_width / 2),
         head_y(grid_height / 2),
-        _score(score),
-        _multiplayer(false) {}
+        _score(score) {}
 
   void Update();
   void Update(Snake secondSnake);
@@ -46,7 +40,6 @@ class Snake {
   int grid_width;
   int grid_height;
   int *_score;
-  bool _multiplayer;
 };
 
 #endif

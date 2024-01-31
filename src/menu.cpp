@@ -19,8 +19,8 @@ void Menu::DrawGameModeMenu()
 {
     std::cout << "" << std::endl;
     std::cout << "/----------------- Game Mode Menu ----------------/" << std::endl;
-    std::cout << "1. 1 Player" << std::endl;
-    std::cout << "2. 2 Players" << std::endl;
+    std::cout << "1. Normal Mode" << std::endl;
+    std::cout << "2. Toxic Food Mode" << std::endl;
     std::cout << "3. Quit" << std::endl;
 }
 

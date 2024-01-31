@@ -80,11 +80,8 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
       alive = false;
 
-      if (!_multiplayer)
-      {
-        std::string msgText{"Score: " + std::to_string(*_score) + "\nSize: " + std::to_string(size)};
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You lose!", msgText.c_str(), NULL);
-      }
+      std::string msgText{"Score: " + std::to_string(*_score) + "\nSize: " + std::to_string(size)};
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You lose!", msgText.c_str(), NULL);
     }
   }
 }

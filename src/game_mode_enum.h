@@ -7,8 +7,8 @@ class GameModeEnum
 public:
     enum States 
     {
-        ONE_PLAYER,
-        TWO_PLAYERS,
+        NORMAL,
+        TOXIC,
         EXIT,
         INVALID
     };
@@ -18,10 +18,10 @@ public:
         switch (n)
         {
         case 1:
-            return ONE_PLAYER;
+            return NORMAL;
             break;
         case 2:
-            return TWO_PLAYERS;
+            return TOXIC;
             break;
         case 3:
             return EXIT;

@@ -9,12 +9,11 @@ class Controller {
  public:
 
   void HandleInput(bool &running, Snake &snake, Game &game) const;
-  void HandleMultiplayerLettersInput(bool &running, Snake &snake) const;
-  void HandleMultiplayerArrowsInput(bool &running, Snake &snake) const;
-
- private:
+  
+private:
   void ChangeDirection(Snake &snake, Snake::Direction input,
-                       Snake::Direction opposite) const;
+                       Snake::Direction opposite, bool &toxiFood) const;
+
 };
 
 #endif

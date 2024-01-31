@@ -1,13 +1,22 @@
 #include "game.h"
 #include <iostream>
+#include <thread>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
+Game::Game(std::size_t grid_width, std::size_t grid_height, bool isToxicFoodMode)
     : snake(grid_width, grid_height, &score),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_h(0, static_cast<int>(grid_height - 1)),
+      isToxicFoodMode(isToxicFoodMode) 
+{
   PlaceFood();
+}
+
+void Game::TimerThread(bool *toxicFood) 
+{
+  std::this_thread::sleep_for(std::chrono::seconds(7));
+  *toxicFood = false;
 }
 
 void Game::Run(Controller const &controller, Renderer *renderer,
@@ -25,7 +34,7 @@ void Game::Run(Controller const &controller, Renderer *renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake, *this);
     Update(renderer);
-    renderer->Render(snake, food);
+    renderer->Render(snake, food, &isToxicFood);
 
     frame_end = SDL_GetTicks();
 
@@ -79,13 +88,26 @@ void Game::Update(Renderer *renderer) {
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
 
+  std::random_device randomDevice;  //Will be used to obtain a seed for the random number engine
+  std::mt19937 gen(randomDevice()); //Standard mersenne_twister_engine seeded with rd()
+  std::uniform_int_distribution<> udist(1, 100);
+
   // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
+  if (food.x == new_x && food.y == new_y) 
+  {
     score++;
     PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.speed += 0.02;
+
+    if(isToxicFoodMode && udist(gen) <= 15)
+    {
+      isToxicFood = true;
+      // resolves 5 seconds later
+      std::thread poisonTimer(&Game::TimerThread, &isToxicFood);
+      poisonTimer.detach();
+    }
   }
 }
 

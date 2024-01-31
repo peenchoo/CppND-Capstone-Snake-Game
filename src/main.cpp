@@ -1,7 +1,6 @@
 #include <iostream>
 #include "controller.h"
 #include "game.h"
-#include "multiplayer_game.h"
 #include "game_mode_enum.h"
 #include "renderer.h"
 #include "menu_enum.h"
@@ -31,12 +30,12 @@ int main() {
         menu.DrawGameModeMenu();
         GameModeEnum::States mode = menu.GameModeMenuController();
 
-        if (mode == GameModeEnum::ONE_PLAYER)
+        if (mode == GameModeEnum::NORMAL)
         {
           menu.setPlayerName();
           Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
           Controller controller;
-          Game game(kGridWidth, kGridHeight);
+          Game game(kGridWidth, kGridHeight, false);
           game.Run(controller, &renderer, kMsPerFrame);
           scores.addScore(menu.getPlayerName(),game.GetScore());
           std::cout << "Game has terminated successfully!\n";
@@ -45,14 +44,18 @@ int main() {
           return 0;
 
         }
-        else if (mode == GameModeEnum::TWO_PLAYERS)
+        else if (mode == GameModeEnum::TOXIC)
         {
+          menu.setPlayerName();
           Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-          MultiplayerGame multiplayerGame(kGridWidth, kGridHeight);
-          multiplayerGame.Run(renderer, kMsPerFrame);
+          Controller controller;
+          Game game(kGridWidth, kGridHeight, true);
+          game.Run(controller, &renderer, kMsPerFrame);
+          scores.addScore(menu.getPlayerName(),game.GetScore());
           std::cout << "Game has terminated successfully!\n";
+          std::cout << "Score: " << game.GetScore() << "\n";
+          std::cout << "Size: " << game.GetSize() << "\n";
           return 0;
-
         }
         else if (mode == GameModeEnum::EXIT)
         {
